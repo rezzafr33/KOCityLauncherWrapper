@@ -1,0 +1,71 @@
+name: Build and Package KOCity Launcher Wrapper
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: 'recursive'
+
+      - name: Make a folder
+        run: mkdir -p KOCity
+
+      - name: Download AppImage
+        run: |
+          wget -O KOCity/knockoutcitylauncher-2.0.3.AppImage https://github.com/kocxyz/Launcher/releases/download/v2.0.3/knockoutcitylauncher-2.0.3.AppImage
+          chmod +x KOCity/knockoutcitylauncher-2.0.3.AppImage
+
+      - name: Copy files to KOCity folder
+        run: |
+          cp knockoutcitylauncher.sh KOCity/
+          cp wine KOCity/
+          chmod +x KOCity/knockoutcitylauncher.sh
+          chmod +x KOCity/wine
+          cp -Rv ULWGL-launcher KOCity/
+          rm -rf KOCity/ULWGL-launcher/.git
+
+      - name: Compress into tar archive
+        run: tar -cvf KOCity.tar KOCity
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: KOCity-artifact
+          path: KOCity.tar
+
+      - name: Get version from file
+        id: get_version
+        run: echo "::set-output name=version::$(cat version.txt)"
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          release_name: Release v${{ steps.get_version.outputs.version }}
+          draft: false
+          prerelease: false
+
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./KOCity.tar
+          asset_name: KOCity.tar
+          asset_content_type: application/x-tar
+
