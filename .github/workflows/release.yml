@@ -1,10 +1,6 @@
-name: Build and Package KOCity Launcher Wrapper
+name: Release KOCity Launcher Wrapper
 
 on:
-  push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
   workflow_dispatch:
 
 jobs:
@@ -37,35 +33,17 @@ jobs:
       - name: Compress into tar archive
         run: tar -cvf KOCity.tar KOCity
 
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: KOCity-artifact
-          path: KOCity.tar
+      - name: Get version from file and create environment file
+        run: |
+          echo "version=$(cat version.txt)" >> $GITHUB_ENV
 
-      - name: Get version from file
-        id: get_version
-        run: echo "::set-output name=version::$(cat version.txt)"
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Create Release and Upload Asset
+        uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v${{ steps.get_version.outputs.version }}
-          release_name: Release v${{ steps.get_version.outputs.version }}
+          tag_name: v${{ env.version }}
+          name: Release v${{ env.version }}
           draft: false
           prerelease: false
-
-      - name: Upload Release Asset
-        id: upload-release-asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./KOCity.tar
-          asset_name: KOCity.tar
-          asset_content_type: application/x-tar
-
+          files: ./KOCity.tar
