@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+
+set -x
+
+me="$(readlink -f "$0")"
+here="${me%/*}"
+
+export ENABLE_GAMESCOPE_WSI=0
+export GAMEID="kocxyz"
+export SteamEnv=0
+export WINEPREFIX="$here/prefix"
+
+$here/ULWGL-launcher/gamelauncher.sh "$HOME/.local/share/Steam/steamapps/common/Proton 8.0" "$@"
