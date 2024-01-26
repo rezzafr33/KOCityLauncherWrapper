@@ -35,7 +35,7 @@ jobs:
 
       - name: Get version from file and create environment file
         run: |
-          echo "version=$(cat version.txt)" >> $GITHUB_ENV
+          echo "version=$(awk '/\.AppImage/{v=$2} /KOCityLaucherWrapper/{w=$2} END{print v"-"w}' versions.txt)" >> $GITHUB_ENV
 
       - name: Create Release and Upload Asset
         uses: softprops/action-gh-release@v1
