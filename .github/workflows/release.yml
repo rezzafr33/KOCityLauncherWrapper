@@ -23,19 +23,17 @@ jobs:
 
       - name: Copy files to KOCity folder
         run: |
-          cp knockoutcitylauncher.sh KOCity/
-          cp wine KOCity/
-          chmod +x KOCity/knockoutcitylauncher.sh
-          chmod +x KOCity/wine
+          cp ./{knockoutcitylauncher.sh,wine,versions.txt} KOCity/
+          chmod +x KOCity/{knockoutcitylauncher.sh,wine}
           cp -Rv ULWGL-launcher KOCity/
           rm -rf KOCity/ULWGL-launcher/.git
 
-      - name: Compress into tar archive
-        run: tar -cvf KOCity.tar KOCity
-
       - name: Get version from file and create environment file
         run: |
-          echo "version=$(cat version.txt)" >> $GITHUB_ENV
+          echo "version=$(awk '/\.AppImage/{v=$2} /KOCityLaucherWrapper/{w=$2} END{print v"-"w}' versions.txt)" >> $GITHUB_ENV
+
+      - name: Compress into tar archive
+        run: tar -cvf KOCity-${{ env.version }}.tar KOCity
 
       - name: Create Release and Upload Asset
         uses: softprops/action-gh-release@v1
@@ -46,4 +44,4 @@ jobs:
           name: Release v${{ env.version }}
           draft: false
           prerelease: false
-          files: ./KOCity.tar
+          files: ./KOCity-${{ env.version }}.tar
