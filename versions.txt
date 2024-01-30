@@ -1,3 +1,4 @@
 #Name	                              Version   URL
 KOCityLaucherWrapper                  0.2       https://github.com/rezzafr33/KOCityLauncherWrapper
 knockoutcitylauncher-2.0.3.AppImage   2.0.3     https://github.com/kocxyz/Launcher
+ULWGL-Launcher                        15f2670   https://github.com/Open-Wine-Components/ULWGL-launcher
