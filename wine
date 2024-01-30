@@ -11,4 +11,4 @@ export SteamEnv=0
 export WINEPREFIX="$here/prefix"
 export PROTONPATH="$HOME/.local/share/Steam/steamapps/common/Proton 8.0"
 
-$here/ULWGL-launcher/gamelauncher.sh "$@"
+"$here"/ULWGL-launcher/gamelauncher.sh "$@"
