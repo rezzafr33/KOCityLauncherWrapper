@@ -21,6 +21,12 @@ jobs:
           wget -O KOCity/knockoutcitylauncher-2.0.3.AppImage https://github.com/kocxyz/Launcher/releases/download/v2.0.3/knockoutcitylauncher-2.0.3.AppImage
           chmod +x KOCity/knockoutcitylauncher-2.0.3.AppImage
 
+      - name: Running patches when necessary.
+        run: |
+          cd ULWGL-launcher/
+          chmod +x ../patches/patch.sh
+          ../patches/patch.sh
+
       - name: Copy files to KOCity folder
         run: |
           cp ./{knockoutcitylauncher.sh,wine,versions.txt} KOCity/

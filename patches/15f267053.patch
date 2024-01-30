@@ -1,0 +1,13 @@
+diff --git a/gamelauncher.sh b/gamelauncher.sh
+index cc40c43..88cee30 100755
+--- a/gamelauncher.sh
++++ b/gamelauncher.sh
+@@ -36,7 +36,7 @@ if [[ -z $STEAM_COMPAT_INSTALL_PATH ]]; then
+   export STEAM_COMPAT_INSTALL_PATH="$gameinstallpath"
+ fi
+ 
+-compat_lib_path=$(findmnt -T "$STEAM_COMPAT_INSTALL_PATH" | tail -n 1 | awk '{ print $1 }')
++compat_lib_path=$(findmnt -T "$STEAM_COMPAT_INSTALL_PATH" | tail -n 1 | awk '{ print $1 }'); [ "$compat_lib_path" = "/" ] && compat_lib_path="$STEAM_COMPAT_INSTALL_PATH"
+ export STEAM_COMPAT_LIBRARY_PATHS="${STEAM_COMPAT_LIBRARY_PATHS:+"${STEAM_COMPAT_LIBRARY_PATHS}:"}$compat_lib_path"
+ 
+ if [[ -z $STEAM_RUNTIME_LIBRARY_PATH ]]; then
