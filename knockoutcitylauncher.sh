@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -x
-
 me="$(readlink -f "$0")"
 here="${me%/*}"
 
